@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE sim SYSTEM "file:sim.dtd">
+<sim>
+
+    <info>
+        <name      uid="1234">BORG111</name>
+        <version   num="1"/>
+        <note>aaa sss ddd</note>
+    
+        
+    </info>
+    
+    <code>
+    
+        <set name="Variable" value="10"/>
+        <set name="zoat" value="-1"/>
+        <set name="zoatAGAIN" value="$zoat$"/>
+        <add name="Variable" value="2"/>
+        
+        <header name="HTTP Header" value="some header for everything..."/>
+                    
+        <get qs="/goat/testsite/doc$zoat$.html?zip=1">
+        </get>
+            <verify crc="2774091" size="7361">
+                <seek string="h1 header one in html doc"/>
+                <seek string="h1 keep seeking from where we left off from last seek"/>
+            </verify>
+            <verify>
+                <seek string="start searching from top of te doc, because it is a new verify context"/>
+            </verify>                     
+        
+
+        <set name="waitVal" value="1000"/>
+        <wait time="5000"/>
+        <wait time="$waitVal$"/>       
+
+        <get qs="/goat/TRY FOR"></get>
+
+        
+        <for count="countVar" init="10">
+            <get qs="/goat/FOr COUNTDOWN $countVar$"></get>            
+        
+            <add name="countVar" value="-1"/>
+        </for>        
+
+        <set name="continueVar" value="true"/>
+        <set name="tap" value="10"/>        
+        <while e="$continueVar$" value="true">
+            
+            <get qs="/goat/WHILE COUNTDOWN $tap$"></get>
+
+            <add name="tap" value="-1"/>            
+
+            <if e="$tap$" value="0">
+                <set name="continueVar" value="false"/>
+            </if>
+        
+        </while>
+        
+    
+    </code>
+    
+</sim>

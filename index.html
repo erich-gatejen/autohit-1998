@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+
+<head>
+<title>Autohit Documentation</title>
+</head>
+
+<body BGCOLOR="#DEDCD8">
+
+<table border="0" width="750" cellpadding="2">
+  <tr>
+    <td width="33%" bgcolor="#00006F"><table border="0" width="100%" cellpadding="2">
+      <tr>
+        <td width="100%" bgcolor="#DEDCD8"><p align="center"><font color="#400000"><big><big><strong>Autohit
+        * Developer's Information</strong></big></big></font></td>
+      </tr>
+    </table>
+    </td>
+  </tr>
+</table>
+
+<h2>Introduction</h2>
+
+<p>This document offers some information about maintaining the base Autohit system.
+&nbsp; Currently, it is a free-form rant, but we always go back and clean it later.&nbsp; </p>
+
+<p>This development environment differs from the packaged user environment.&nbsp; There is
+a batch tool that will take the development environment and create an installable user
+environment.&nbsp;&nbsp; Some user developed objects might be useful in the base system
+and can be integrated.</p>
+
+<p>&nbsp;</p>
+
+<h2>Files and Directories</h2>
+
+<table border="0" width="100%">
+  <tr>
+    <td width="16%" valign="top" align="left">./</td>
+    <td width="84%" valign="top" align="left">Root directory.&nbsp; This will be (should be)
+    set at the&nbsp; %AUTOHIT_ROOT% environment variable in the setenv.bat batch file.</td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top" align="left">./setenv.bat</td>
+    <td width="84%" valign="top" align="left">Sets the environment.&nbsp; When you first
+    launch a Shell (or DOS box), execute this batch file to set the environment.&nbsp; You
+    need to run it each and every shell you open!&nbsp; This does not set global environment
+    variables!<p>Also, if you've just installed, you need to edit this file and set
+    AUTOHIT_ROOT to directory path where to where it is installed.</td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top" align="left">./make.bat</td>
+    <td width="84%" valign="top" align="left">Run a make on EVERYTHING!&nbsp; If you add new
+    component, package, or other source code, make sure this batch either compiles it or calls
+    its makefile.</td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top" align="left">./makeDocs.bat</td>
+    <td width="84%" valign="top" align="left">Runs javadoc on the java packages.</td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top" align="left">./package.bat</td>
+    <td width="84%" valign="top" align="left">Packages the system for general users.&nbsp; It
+    will leave a .zip file in the root directory; distribute this, as it has everything they
+    will need.&nbsp; If you add new java packages or major components, you may need to edit
+    this batch so that they are properly packaged. </td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top" align="left">./index.html</td>
+    <td width="84%" valign="top" align="left">This document.</td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top" align="left">./pack-setenv.bat</td>
+    <td width="84%" valign="top" align="left">This will become the setenv.bat in the packaged
+    system.&nbsp; Since everything is JAR'ed in the packaged system, the classpath needs to be
+    set differently than in the this environment.&nbsp; If you add a major new component or a
+    3rd partly library, you may need to edit this.</td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top" align="left">./*.java</td>
+    <td width="84%" valign="top" align="left">A few application classes.</td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top" align="left">./autohit/*</td>
+    <td width="84%" valign="top" align="left">Autohit runtime system.&nbsp; </td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top" align="left">./creator/*</td>
+    <td width="84%" valign="top" align="left">Autohit compilers and other tools used for
+    making Sims, Scenarios, and the like.</td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top" align="left">./lib/*</td>
+    <td width="84%" valign="top" align="left">3rd party libraries.</td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top" align="left">./master/*</td>
+    <td width="84%" valign="top" align="left">Autohit remote control system.</td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top" align="left">./dev-test/*</td>
+    <td width="84%" valign="top" align="left">Classes and files used to test while developing.
+    &nbsp; This is not packaged for general users.</td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top" align="left">./test/*</td>
+    <td width="84%" valign="top" align="left">Tests and test samples for general users.
+    &nbsp; This is packaged for general users.</td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top" align="left">./docs/*</td>
+    <td width="84%" valign="top" align="left">Documentation tree.&nbsp; ALL of this directory
+    is packaged.</td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top" align="left">./redux/*</td>
+    <td width="84%" valign="top" align="left">Data reduction tools used for analyzing test
+    data.</td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top" align="left">./package/*</td>
+    <td width="84%" valign="top" align="left">Working directory for packaging the system.
+    &nbsp; You can delete this at any time.</td>
+  </tr>
+</table>
+
+<p><strong>&nbsp;</strong></p>
+
+<h2>Making the System</h2>
+
+<p>The following is the procedure for making and packaging the system.
+
+<ul>
+  <li>Launch a shell (DOS./Command box)</li>
+  <li>cd to the root directory for the system</li>
+  <li>Set environment by running &quot;setenv.bat&quot;</li>
+  <li>Make all the code by running &quot;make.bat&quot;</li>
+  <li>Make all the documentation by running &quot;makeDocs.bat&quot;</li>
+  <li>Package the environment by running &quot;package.bat&quot;</li>
+  <li>You can now distribute the &quot;autohit???.zip&quot; file that is in the root
+    directory.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+</body>
+</html>

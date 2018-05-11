@@ -1,0 +1,102 @@
+<?xml encoding="US-ASCII"?>
+
+<!-- Version 1.0 SimLang for autohit  -->
+
+<!-- COMMON elements and entities  ########################## -->
+
+<!ELEMENT note (#PCDATA)>
+
+<!-- INFO.  This section describes the SIM ################## -->
+
+<!ELEMENT version (#PCDATA)>
+<!ATTLIST version
+   num CDATA #IMPLIED>
+
+<!ELEMENT name (#PCDATA)>
+<!ATTLIST name
+   uid CDATA #REQUIRED>
+
+<!ENTITY % OptionalInfo "(version|note)">
+
+<!ELEMENT info (name, (%OptionalInfo;)*)>
+
+
+<!-- CODE.  This section contains the code for the SIM  #### -->
+
+
+<!ENTITY % Instruction "get | wait | set | nv | header | add | verify">
+<!ENTITY % Control "for | block | while | if">  
+<!ENTITY % CodeConstruct "(%Instruction; | %Control;)*">
+
+<!ELEMENT set EMPTY>
+<!ATTLIST set
+  name CDATA #REQUIRED
+  value CDATA #REQUIRED
+  >
+  
+<!ELEMENT wait EMPTY>
+<!ATTLIST wait
+  time CDATA #REQUIRED>
+
+<!ELEMENT header EMPTY>
+<!ATTLIST header
+  name  CDATA #REQUIRED
+  value CDATA #REQUIRED>
+  
+<!ELEMENT add EMPTY>
+<!ATTLIST add
+  name  CDATA #REQUIRED
+  value CDATA #REQUIRED>    
+
+<!ELEMENT nv (#PCDATA)>
+<!ATTLIST nv
+  name  CDATA #REQUIRED> 
+
+<!ENTITY % VerificationSpec "(seek | exec | if)*">
+
+<!ELEMENT verify ((%VerificationSpec;)*)>
+<!ATTLIST verify
+  crc  CDATA #IMPLIED
+  size CDATA #IMPLIED>
+
+<!ELEMENT seek EMPTY>
+<!ATTLIST seek
+  string CDATA #REQUIRED>
+
+<!ELEMENT exec (#PCDATA)>
+<!ATTLIST exec
+  invoke CDATA #REQUIRED>
+
+<!ENTITY % QuerySpecification "(if | nv | verify | header)*">
+
+<!ELEMENT get ((%QuerySpecification;)*)>
+<!ATTLIST get
+  qs CDATA #REQUIRED>
+
+<!ELEMENT for (%CodeConstruct;)>
+<!ATTLIST for
+  count     CDATA   #REQUIRED
+  init      CDATA   #IMPLIED
+  >
+
+<!ELEMENT while (%CodeConstruct;)>
+<!ATTLIST while
+  e      CDATA   #REQUIRED
+  value  CDATA   #REQUIRED
+  >
+  
+<!ELEMENT if (%CodeConstruct;)>
+<!ATTLIST if
+  e      CDATA   #REQUIRED
+  value  CDATA   #REQUIRED
+  >  
+
+<!ELEMENT block (%CodeConstruct;)>  
+
+<!ELEMENT code ((%CodeConstruct;)*)>
+
+
+<!-- A Sim.  consists of a Info section and Code section -->
+<!ELEMENT sim (info, code)>
+
+

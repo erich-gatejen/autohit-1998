@@ -1,0 +1,525 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+
+<head>
+<title>Autohit SimLang Documentation</title>
+</head>
+
+<body BGCOLOR="#DEDCD8">
+
+<table border="0" width="750" cellpadding="2" height="5101">
+  <tr>
+    <td width="33%" bgcolor="#00006F" height="38"><table border="0" width="100%"
+    cellpadding="2">
+      <tr>
+        <td width="100%" bgcolor="#DEDCD8"><p align="center"><font color="#400000"><big><big><strong>SimLang
+        * Simulation Language for Autohit</strong></big></big></font></td>
+      </tr>
+    </table>
+    </td>
+  </tr>
+  <tr>
+    <td width="100%" height="5024">&nbsp;<p>This doclet describes the language used to code Sims.
+    All constructs must be in well-formed XML; the compiler will kick out both syntactic and
+    semantic errors.</p>
+    <p>Sims are executed by a SimVM java object--autohit.SimVM. </p>
+    <table border="0" width="740">
+      <tr>
+        <td width="99"><strong>SECTIONS</strong></td>
+        <td width="116" align="center"><a href="#statements">Statements</a></td>
+        <td width="95" align="center"><a href="#variables">Variables</a></td>
+        <td width="141" align="center"><a href="#generalex">General Example</a></td>
+        <td width="141" align="center"><a href="#local1">local1.sim Example</a></td>
+        <td width="141" align="center"><a href="#ver1">ver1.sim Example</a></td>
+      </tr>
+    </table>
+    <p><em><font color="#400040">NOTE!&nbsp; &lt;exec&gt; is not completely implemented.</font></em></p>
+    <table border="0" width="742" cellspacing="0" cellpadding="2">
+      <tr>
+        <td width="738" bgcolor="#C4C1D0"><font color="#400000"><strong><big>&nbsp; </big><a
+        name="statements"></a><big>Statements</big></strong></font></td>
+      </tr>
+    </table>
+    <p>The following are the valid statements for SimLang.&nbsp; Each is a well-formed XML
+    element.&nbsp; The statement names and attributes are case sensitive and are all
+    lower-case.</p>
+    <p><a href="#sim">sim</a>&nbsp; <a href="#info">info</a>&nbsp; <a href="#name">name</a>
+    &nbsp; <a href="#version">version</a>&nbsp; <a href="#note">note</a>&nbsp; <a href="#code">code</a>
+    &nbsp; <a href="#set">set</a>&nbsp; <a href="#for">for</a>&nbsp; <a href="#while">while</a>
+    &nbsp; <a href="#if">if</a>&nbsp; <a href="#wait">wait</a>&nbsp; <a href="#get">get</a>
+    &nbsp; <a href="#header">header</a>&nbsp; <a href="#nv">nv</a>&nbsp; <a href="#block">block</a>
+    &nbsp; <a href="#add">add</a>&nbsp; <a href="#verify">verify</a>&nbsp; <a href="#seek">seek</a>
+    &nbsp; <a href="#exec">exec</a>&nbsp; </p>
+    <hr color="#808000">
+    <h3><a name="sim"></a>SIM</h3>
+    <p>&lt;sim&gt;&nbsp; the script &lt;/sim&gt;</p>
+    <p>Wrapper for the entire simulation.</p>
+    <hr color="#808000">
+    <h3><a name="info"></a>INFO</h3>
+    <p>&lt;info&gt; information section&nbsp;&lt;/info&gt;</p>
+    <p>Wrapper for the information section of a simulation.&nbsp; The elements therein will be
+    used to for the Sim object header.</p>
+    <p><code>&lt;info&gt;<br>
+    &nbsp;&nbsp; &lt;<a href="#name">name</a> uid=&quot;1&quot;&gt;A name&lt;/name&gt;<br>
+    &nbsp;&nbsp; &lt;<a href="#version">version</a> num=&quot;1&quot;/&gt;<br>
+    &nbsp;&nbsp; &lt;<a href="#note">note</a>&gt;Text text text&lt;/note&gt;<br>
+    &lt;/info&gt;</code></p>
+    <hr color="#808000">
+    <h3><a name="name"></a>NAME</h3>
+    <p>&lt;name uid=&quot;id text&quot;&gt;textual name&lt;/name&gt;</p>
+    <p>An Info element. It can assign an unique ID and textual name to the Sim.&nbsp; It will
+    be used by the SimVM as the session name, and thus logged, if session name isn't otherwise
+    specified.<ul>
+      <li><em>(attribute)</em> REQUIRED <strong>uid</strong> = A unique ID.</li>
+      <li><em>(content)</em> Text name.&nbsp; It is best if there aren't any spaces, but it will
+        still work.</li>
+    </ul>
+    <hr color="#808000">
+    <h3><a name="version"></a>VERSION</h3>
+    <p>&lt;version num=&quot;1&quot;/&gt;</p>
+    <p>A version number.&nbsp; Currently, it doesn't do anything.&nbsp; It could be used by
+    specific VMs.<ul>
+      <li><em>(attribute)</em> REQUIRED <strong>num</strong> = A version number.</li>
+    </ul>
+    <hr color="#808000">
+    <p><a name="note"></a><strong>NOTE</strong></p>
+    <p>&lt;note&gt;narrative text...&nbsp; etc... etc..&lt;/name&gt;</p>
+    <p>A note.&nbsp; It is general text that explains the Sim.&nbsp; It doesn't actually do
+    anything.</p>
+    <hr color="#808000">
+    <p><a name="code"></a><strong>CODE</strong></p>
+    <p>&lt;code&gt;&nbsp; the code&nbsp; &lt;/code&gt;</p>
+    <p>Wrapper for the actual code for the simulation.</p>
+    <p><code>&lt;code&gt;<br>
+    &nbsp;&nbsp; instructions....<br>
+    &lt;/code&gt;</code></p>
+    <hr color="#808000">
+    <h3><a name="set"></a>SET</h3>
+    <p>&lt;set name=&quot;VariableName&quot; value=&quot;a value&quot;/&gt;</p>
+    <p>This will create and set a variable. If the variable already exists, it will only set
+    the value. The variable will be available as long as it remains in scope. Once it passes
+    from scope, the value is lost forever.</p>
+    <p>The value may be any sequence that can be specified through text, including escaped
+    binary.&nbsp; The name can be any string, but it should start with an alpha.<ul>
+      <li><em>(attribute)</em> REQUIRED <strong>name</strong> = Variable name.</li>
+      <li><em>(attribute)</em> REQUIRED <strong>value</strong> = Set the variable to this value.</li>
+    </ul>
+    <hr color="#808000">
+    <h3><a name="for"></a>FOR</h3>
+    <p>&lt;for count=&quot;indexVariable&quot; init=&quot;initValue&quot;&gt;</p>
+    <p>A for loop.&nbsp; When the count variable equals &quot;0&quot;, the loop will break.
+    &nbsp; The variable will NOT be automatically decremented.&nbsp; Also, it must only
+    contain numeric characters or the VM will die from an exception.&nbsp; </p>
+    <p>If the variable does not already exist, it will be created.&nbsp; If the init attribute
+    is present, the variable will be initialized to its value.&nbsp; <ul>
+      <li><em>(attribute)</em> REQUIRED <strong>count</strong> = Variable name.&nbsp; The loop
+        will break when it equals &quot;0&quot;.</li>
+      <li><em>(attribute)</em> OPTIONAL <strong>init</strong>&nbsp; = Set the count variable to
+        this value.</li>
+    </ul>
+    <p><code>&lt;for count=&quot;indexVar&quot; init=&quot;3&quot;&gt;<br>
+    &nbsp;&nbsp; ...some code...<br>
+    &nbsp;&nbsp; &lt;add name=&quot;indexVar&quot; value=&quot;-1&quot;/&gt;<br>
+    &lt;/for&gt;</code></p>
+    <p><em>The for block defines a local variable scope.</em></p>
+    <hr color="#808000">
+    <h3><a name="while"></a>WHILE</h3>
+    <p>&lt;while e=&quot;$aVariable$&quot; value=&quot;something&quot;&gt;</p>
+    <p>A while loop. The loop will continue as long as the expression e is textually equal to
+    the expression value, after any operations or variable replacements.<ul>
+      <li><em>(attribute)</em> REQUIRED <strong>e</strong> = Left-hand expression.</li>
+      <li><em>(attribute)</em> REQUIRED <strong>value</strong>&nbsp; = Right-hand expression.</li>
+    </ul>
+    <p><code>&lt;while e=&quot;$continueVar$&quot; value=&quot;1&quot;&gt;<br>
+    &nbsp;&nbsp; &lt;!-- EEK! endless loop if we don't change the value of continueVar...
+    --&gt;<br>
+    &lt;/while&gt;</code></p>
+    <p><em>The while block defines a local variable scope.</em></p>
+    <hr color="#808000">
+    <h3><a name="if"></a>IF</h3>
+    <p>&lt;if e=&quot;lh-expression&quot; value=&quot;rh expression&quot;&gt;</p>
+    <p>An if block. The block will execute if the expression e is textually equal to the
+    expression value, after any operations or variable replacements.<ul>
+      <li><em>(attribute)</em> REQUIRED <strong>e</strong> = Left-hand expression.</li>
+      <li><em>(attribute)</em> REQUIRED <strong>value</strong>&nbsp; = Righ-hand expression.</li>
+    </ul>
+    <p><code>&lt;set name=&quot;variableX&quot; value=&quot;1&quot;/&gt;<br>
+    &lt;if e=&quot;$variableX&quot; value=&quot;2&quot;&gt;<br>
+    &nbsp;&nbsp; &lt;!-- this will NOT execute --&gt;<br>
+    &lt;/if&gt;<br>
+    &lt;if e=&quot;$variableX&quot; value=&quot;1&quot;&gt;<br>
+    &nbsp;&nbsp; &lt;!-- this will execute --&gt;<br>
+    &lt;/if&gt;</code></p>
+    <p><em>The if block defines a local variable scope.</em></p>
+    <hr color="#808000">
+    <h3><a name="wait"></a>WAIT</h3>
+    <p>&lt;wait time=&quot;1000&quot;/&gt;</p>
+    <p>This will cause the Sim to wait for the specified time measured in milliseconds. &nbsp;
+    This will block the VM until the time expires!<ul>
+      <li><em>(attribute) </em>REQUIRED <strong>time</strong>&nbsp; = time to wait measured in
+        milliseconds.&nbsp; MUST be a numeric!</li>
+    </ul>
+    <p><code>&lt;wait time=&quot;1000&quot;/&gt;<br>
+    &lt;!-- wait a full second --&gt;</code></p>
+    <hr color="#808000">
+    <h3><a name="get"></a>GET</h3>
+    <p>&lt;get qs=&quot;/cgi-bin/something.pl?id=9876&quot;&gt;</p>
+    <p>Do a query using the registered transport.&nbsp; The VM will block on this until the
+    query is complete.&nbsp; The query result will be available for verification instructions
+    until the next get is performed.&nbsp; </p>
+    <p>Any instructions within the &lt;get&gt; block are executed before the query is
+    performed.&nbsp; Therefore, headers and nv's put within the get block will be used for
+    that get.&nbsp; Also, verification instructions should not be put in the get block! &nbsp;
+    They should be placed after the get, as the query result will remain valid until the NEXT
+    get query is completed.<ul>
+      <li><em>(attribute)</em> REQUIRED <strong>qs</strong> = The Query string.&nbsp; This is
+        transport dependent, but for http it would be the URL without protocol or domain.</li>
+      <li><em>(content) </em>OPTIONAL &lt;<a href="#if">if</a>&gt;, &lt;<a href="#header">header</a>&gt;,
+        &lt;<a href="#nv">nv</a>&gt; or &lt;<a href="http://">verify</a>&gt;. &nbsp; Technically,
+        you can use verification operations, but they will be performed against the previous
+        &lt;get&gt; result.</li>
+    </ul>
+    <p><code>&lt;get qs=&quot;/goat/testsite/doc.html?zip=1&quot;&gt;<br>
+    &nbsp;&nbsp; &lt;<a href="#header">header</a> name=&quot;HTTP Header&quot;
+    value=&quot;some header used only for this GET&quot;&gt;<br>
+    &lt;/get&gt;</code></p>
+    <p><em>The for block defines a local scope for headers and nv's.</em></p>
+    <hr color="#808000">
+    <h3><a name="header"></a>HEADER</h3>
+    <p>&lt;header name=&quot;HEADER-NAME&quot; value=&quot;Some value....&quot;/&gt;</p>
+    <p>A header element. It is a name/value pair.&nbsp; Typically, the registered transport
+    will use this as a protocol header element.</p>
+    <p>As long as it remains in scope, it will be used by any <a href="#get">GET</a>.<ul>
+      <li><em>(attribute) </em>REQUIRED <strong>name</strong> = Field name.</li>
+      <li><em>(attribute)</em> REQUIRED <strong>value</strong>&nbsp; = Field value.</li>
+    </ul>
+    <p><code>&lt;header name=&quot;HTTP Header&quot; value=&quot;Used in both GETs
+    below&quot;&gt;<br>
+    &lt;<a href="#get">get</a> qs=&quot;/goat/testsite/doc.html?zip=1&quot;&gt;<br>
+    &nbsp;&nbsp; &lt;header name=&quot;HTTP Header&quot; value=&quot;Used just for THIS
+    get&quot;&gt;<br>
+    &lt;/get&gt;<br>
+    &lt;get qs=&quot;/goat/testsite/doc.html?zip=2&quot;&gt;</code></p>
+    <hr color="#808000">
+    <h3><a name="nv"></a>NV</h3>
+    <p>&lt;nv name=&quot;SomeName&quot; value=&quot;Some value....&quot;/&gt;</p>
+    <p>An nv element. It is a name/value pair.&nbsp; Typically, the registered transport will
+    use this as in the body/content of a query.&nbsp; (For an http transport, it will be
+    encoded a html form name/value element in a POST query.)</p>
+    <p>As long as it remains in scope, it will be used by any <a href="#get">GET</a>.<ul>
+      <li><em>(attribute)</em> REQUIRED <strong>name</strong> = Field name.</li>
+      <li><em>(attribute)</em> REQUIRED <strong>value</strong>&nbsp; = Field value.</li>
+    </ul>
+    <p><code>&lt;nv name=&quot;HTTP POST content element&quot; value=&quot;Used in both GETs
+    below&quot;&gt;<br>
+    &lt;<a href="#get">get</a> qs=&quot;/goat/testsite/doc.html?zip=1&quot;&gt;<br>
+    &nbsp;&nbsp; &lt;header name=&quot;HTTP POST content element&quot; value=&quot;Used just
+    for THIS get&quot;&gt;<br>
+    &lt;/get&gt;<br>
+    &lt;get qs=&quot;/goat/testsite/doc.html?zip=2&quot;&gt;</code></p>
+    <hr color="#808000">
+    <h3><a name="block"></a>BLOCK</h3>
+    <p>&lt;block&gt;&nbsp; ...scoped block...&nbsp; &lt;/block&gt;</p>
+    <p>Builds a simple scope block.</p>
+    <p><code>&lt;<a href="#set">set</a> name=&quot;VariableX&quot; value=&quot;1&quot;/&gt;<br>
+    &lt;block&gt;<br>
+    &nbsp;&nbsp; &lt;set name=&quot;VariableY&quot; value=&quot;2&quot;/&gt;<br>
+    &nbsp;&nbsp; &lt;!-- Both VariableX and VariableY valid here --&gt;<br>
+    &lt;/block&gt;<br>
+    &lt;!-- Only VariableX is valid here.&nbsp; VariableY only valid within the scope of the
+    &lt;block&gt;. --&gt;</code></p>
+    <hr color="#808000">
+    <h3><a name="add"></a>ADD </h3>
+    <p>&lt;add name=&quot;VariableX&quot; value=&quot;100&quot;/&gt;</p>
+    <p>Add a numeric to a numeric variable.&nbsp; You can subtract by specifying a negative
+    value.&nbsp; If the value of the variable or the value attribute are anything other than a
+    pure integer numeric, the VM will fail with a type-mismatch exception.&nbsp; A pure
+    numeric is a string with only numeric characters and an optional prefix sign character (+
+    or -).</p>
+    <p>If the variable is not defined, the VM will fail with a variable-not-found exception.<ul>
+      <li><em>(attribute)</em> REQUIRED <strong>name</strong> = Variable name to which to add.</li>
+      <li><em>(attribute)</em> REQUIRED <strong>value</strong>&nbsp; = A pure integer numeric
+        value.</li>
+    </ul>
+    <p><code>&lt;<a href="#set">set</a> name=&quot;accumulator&quot; value=&quot;1&quot;/&gt;<br>
+    &lt;set name=&quot;bad&quot; value=&quot;jsjs13213&quot;/&gt;<br>
+    &lt;add name=&quot;accumulator&quot; value=&quot;100&quot;/&gt;&nbsp;&nbsp; &lt;!-- VALID
+    --&gt;<br>
+    &lt;add name=&quot;accumulator&quot; value=&quot;42jfd&quot;/&gt; &lt;!-- BAD.&nbsp; Value
+    isn't pure numeric --&gt; <br>
+    &lt;add name=&quot;bad&quot; value=&quot;1&quot;/&gt;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!-- BAD.
+    &nbsp; Variable value isn't pure numeric --&gt;</code><font </p></p>
+    <hr color="#808000">
+    <h3><a name="verify"></a>VERIFY </h3>
+    <p>&lt;verify crc=&quot;12345678&quot; size=&quot;100&quot;&gt;
+    &lt;seek&gt;|&lt;exec&gt;&lt;if&gt; &lt;/verify&gt;</p>
+    <p>Build a verification context for the last Response.&nbsp; This instruciton can
+    optionally check the crc value and size of the Response content.&nbsp; At the beginning of
+    a verification context, the a seek pointer is set to the beginning of the Resposne
+    content.&nbsp; All subsiquent seek operations will move forward through the content,
+    starting where the previous seek stopped.<ul>
+      <li><em>(attribute)</em> OPTIONAL <strong>crc</strong> = A CRC value for the content.</li>
+      <li><em>(attribute)</em> OPTIONAL <strong>size</strong> = A size value for the content.</li>
+      <li><em>(content) </em>OPTIONAL &lt;<a href="#seek">seek</a>&gt;, &lt;<a href="#exec">exec</a>&gt;,
+        &lt;<a href="#if">if</a>&gt;.</li>
+    </ul>
+    <p><code>&lt;verify crc=&quot;905819271&quot; size=&quot;5180&quot;&gt;<br>
+    &nbsp;&nbsp; &lt;<a href="#seek">seek</a> string=&quot;release&quot;/&gt;<br>
+    &nbsp;&nbsp; &lt;seek string=&quot;goat!&quot;/&gt;<br>
+    &lt;/verify&gt;</code></p>
+    <hr color="#808000">
+    <h3><a name="seek"></a>SEEK </h3>
+    <p>&lt;seek string=&quot;look for this string&quot;/&gt;</p>
+    <p>Seek a string in the Response content.&nbsp; It starts from where a previous seek
+    stopped or the beginning if it is the first seek in a &lt;verify&gt; context.<ul>
+      <li><em>(attribute)</em> REQUIRED <strong>string</strong> = What to seek.&nbsp; It should be
+        encoded according to XML 1.0.&nbsp; Character matching will be performed according to java
+        encoding rules (so, yes, UNICODE is possible).</li>
+    </ul>
+    <p><code>&lt;<a href="#verify">verify</a> crc=&quot;905819271&quot;
+    size=&quot;5180&quot;&gt;<br>
+    &nbsp;&nbsp; &lt;seek string=&quot;release&quot;/&gt;<br>
+    &nbsp;&nbsp; &lt;seek string=&quot;goat!&quot;/&gt;<br>
+    &lt;/verify&gt;</code></p>
+    <hr color="#808000">
+    <h3><a name="exec"></a>EXEC </h3>
+    <p>&lt;exec invoke=&quot;perl-module&quot;&gt; ...some perl code... &lt;/exec&gt; </p>
+    <p>Invoke some external executable or resource to handle a verification routine.&nbsp; The
+    actual content of an exec is not defined by SimLang.&nbsp; Rather, various support modules
+    can be plugged into the system to handle the exec.&nbsp; The specific modules will define
+    their usage.</p>
+    <p>All variables will be available to the support module.<ul>
+      <li><em>(attribute)</em> REQUIRED <strong>invoke</strong> = An invocation specifier. &nbsp;
+        It tells which module to use.</li>
+      <li><em>(content)</em> REQUIRED&nbsp; Code, parameters, or whatever the specific modules
+        expects..</li>
+    </ul>
+    <p><code>&lt;<a href="#verify">verify</a>&gt;<br>
+    &nbsp;&nbsp; &lt;exec invoke=&quot;BASIC&quot;&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10 PRINT &quot;HELLO WORLD&quot;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 20 END<br>
+    &nbsp;&nbsp; &lt;/exec&gt;<br>
+    &lt;/verify&gt;</code></p>
+    <hr color="#808000">
+    <table border="0" width="742" cellspacing="0" cellpadding="2">
+      <tr>
+        <td width="738" bgcolor="#C4C1D0"><font color="#400000"><strong><big>&nbsp; </big><a
+        name="variables"></a><big>Variables</big></strong></font></td>
+      </tr>
+    </table>
+    <p>All variables are tagged with a pre- and postfix '$'. The '$' character is escaped with
+    two consecutive '$$'. A variable name is any alphanumeric AND white space, but it should
+    begin with an alpha. It may contain any character, but if it will be evaluated as a
+    numeric, it should be a trim string containing ONLY numeric characters.</p>
+    <p>A variable will persist within the scope that it is first set.&nbsp; Environment
+    variables will persist through ALL execution and are initially set by the implementing VM
+    and/or execution context. The following are a new standard environment vars.</p>
+    <p>Any variable that begins with a &quot;!&quot; will be given to the registered transport
+    when it is first set.&nbsp; The transport will see the variable without the &quot;!&quot;.
+    &nbsp; For instance, a variable named &quot;!cookies&quot; will be given to the transport
+    as &quot;cookies,&quot; but will still be seen as &quot;!cookies&quot; by the Sim.</p>
+    <h4>Stock Environment Variables</h4>
+    <p>The following variables will be automatically set by the SimVM.&nbsp; Additional
+    environment variables MAY be set by other Autohit components; such variables are
+    documented by their respective component.</p>
+    <p>$lastVerify$ = Result of the last verification. &quot;0&quot; if it failed,
+    &quot;1&quot; if it passed.</p>
+    <p>$transCode$ = Result code value from the last &quot;GET.&quot; The possible values are
+    transport specific. </p>
+    <hr color="#808000">
+    <table border="0" width="742" cellspacing="0" cellpadding="2">
+      <tr>
+        <td width="738" bgcolor="#C4C1D0"><font color="#400000" size="3"><strong><big>&nbsp; </big><a
+        name="generalex"></a><big>General Example</big></strong></font></td>
+      </tr>
+    </table>
+    <p>The following example shows each instruction.&nbsp; This Sim doesn't do anything
+    useful. </p>
+    <pre><font SIZE="2">&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE sim SYSTEM &quot;file:sim.dtd&quot;&gt;
+&lt;<a
+href="#sim">sim</a>&gt;
+
+&lt;<a href="#info">info</a>&gt;
+   &lt;<a href="#name">name</a> uid=&quot;2323&quot;&gt;Sim for BORG111&lt;/name&gt;
+   &lt;<a
+href="#version">version</a> num=1/&gt;
+   &lt;<a href="#note">note</a>&gt;aaa sss ddd&lt;/note&gt;
+&lt;/info&gt;
+
+&lt;<a
+href="#code">code</a>&gt;
+   &lt;<a href="#set">set</a> name=&quot;Variable&quot; value=&quot;10&quot;/&gt;
+   &lt;set name=&quot;zoat&quot; value=&quot;-1&quot;/&gt;
+   &lt;set name=&quot;zoatAGAIN&quot; value=&quot;$zoat$&quot;/&gt;
+   &lt;<a
+href="#add">add</a> name=&quot;Variable&quot; value=&quot;2&quot;/&gt;
+
+   &lt;<a href="#header">header</a> name=&quot;HTTP Header&quot; value=&quot;some header for everything...&quot;&gt;
+
+   &lt;<a
+href="#get">get</a> qs=&quot;/goat/testsite/doc$zoat$.html?zip=1&quot;&gt;
+   &lt;/get&gt;
+   &lt;<a
+href="#get">verify</a> crc=&quot;2774091&quot; size=&quot;7361&quot;&gt;
+       &lt;<a
+href="#seek">seek</a> string=&quot;some text in the doc&quot;/&gt;
+       &lt;seek string=&quot;keep seeking from where we left off from last seek&quot;/&gt;
+   &lt;/verify&gt;
+   &lt;verify&gt;
+      &lt;seek string=&quot;start searching from top of te doc, because it is a new verify context&quot;/&gt;
+   &lt;/verify&gt; 
+
+   &lt;<a
+href="#block">block</a>&gt; &lt;!-- create a scope --&gt;
+      &lt;set name=&quot;Wibble&quot; value=&quot;This var will only be around within this &lt;block&gt;&quot;/&gt;
+      &lt;<a
+href="#nv">nv</a> name=&quot;goat&quot;&gt;blah blag form data *zOt*&lt;/nv&gt;
+   &lt;/block&gt; &lt;!-- done with scope --&gt;
+
+   &lt;set name=&quot;waitVal&quot; value=&quot;10000&quot;/&gt;
+   &lt;<a
+href="#wait">wait</a> time=&quot;1000&quot;/&gt;
+   &lt;wait time=&quot;$waitVal$&quot;/&gt; &lt;!-- will wait 10,000 ms --&gt;
+   &lt;add name=&quot;waitVal&quot; value=&quot;20000&quot;/&gt;
+   &lt;wait time=&quot;$waitVal$0&quot;/&gt; &lt;!-- will wait 300,000 ms. 10,000 + 20,000 = 30,000 --&gt;
+   &lt;!-- then a '0' is appended to the resolved variable --&gt;
+   &lt;<a
+href="#for">for</a> count=&quot;countVar&quot; init=&quot;10&quot;&gt;
+      &lt;add name=&quot;countVar value=&quot;-1&quot;/&gt; &lt;!-- YOU have to decrement a FOR --&gt;
+   &lt;/for&gt;
+
+   &lt;<a
+href="#if">if</a> e=&quot;$zoat$&quot; value=&quot;-1&quot;&gt;
+      &lt;!-- any code here will run, because $zoat$ DOES equal &quot;-1&quot;. --&gt;
+   &lt;/if&gt;
+
+   &lt;set name=&quot;continueVar&quot; value=&quot;1&quot;/&gt;
+   &lt;<a
+href="#while">while</a> e=&quot;$continueVar$&quot; value=&quot;1&quot;&gt;
+      &lt;!-- EEK! endless loop if we don't change the value of continueVar... --&gt;
+   &lt;/while&gt;
+
+   &lt;!-- comments are plain only XML comments... --&gt;
+
+&lt;/code&gt;
+
+&lt;/sim&gt;</pre>
+    </font><p>&nbsp;</p>
+    <table border="0" width="742" cellspacing="0" cellpadding="2">
+      <tr>
+        <td width="738" bgcolor="#C4C1D0"><font color="#400000" size="3"><strong><big>&nbsp; </big><a
+        name="local1"></a><big>Example - local1.sim</big></strong></font></td>
+      </tr>
+    </table>
+    <p>This example can be found in the ./test directory.&nbsp; It will push a few HTTP hits
+    against a default IIS installation.&nbsp; It compiles and works.&nbsp; You can use the
+    Test or HTTP transport. </p>
+    <pre><font SIZE="2">&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE sim SYSTEM &quot;file:sim.dtd&quot;&gt;
+&lt;sim&gt;
+
+    &lt;info&gt;
+        &lt;name      uid=&quot;1&quot;&gt;LOCAL1&lt;/name&gt;
+        &lt;version   num=&quot;1&quot;/&gt;
+        &lt;note&gt;Test local hits&lt;/note&gt;
+                
+    &lt;/info&gt;
+    
+    &lt;code&gt;
+        
+        &lt;!-- Hit a default IIS install --&gt;
+
+        &lt;get qs=&quot;/Default.asp&quot;&gt;&lt;/get&gt;
+        &lt;get qs=&quot;/iissamples/default/SQUIGGLE.GIF&quot;&gt;&lt;/get&gt;
+        &lt;get qs=&quot;/iissamples/default/MSFT.GIF&quot;&gt;&lt;/get&gt;                
+        &lt;get qs=&quot;/iissamples/default/nav2.gif&quot;&gt;&lt;/get&gt;                
+        &lt;get qs=&quot;/iissamples/default/IISTitle.gif&quot;&gt;&lt;/get&gt;
+        
+        &lt;wait time=&quot;1500&quot;/&gt;
+        &lt;get qs=&quot;/iissamples/default/IE.GIF&quot;&gt;&lt;/get&gt;                
+        &lt;get qs=&quot;/default.asp&quot;&gt;&lt;/get&gt;                
+        &lt;get qs=&quot;/iissamples/default/IISSide.GIF&quot;&gt;&lt;/get&gt;   
+        &lt;get qs=&quot;/iissamples/default/IISTitle.gif&quot;&gt;&lt;/get&gt;        
+        &lt;get qs=&quot;/iissamples/default/LEARN.asp&quot;&gt;&lt;/get&gt;
+        &lt;get qs=&quot;/iissamples/default/IISTitle.gif&quot;&gt;&lt;/get&gt;
+        
+        &lt;wait time=&quot;2500&quot;/&gt;    
+        &lt;get qs=&quot;/iissamples/default/samples.asp&quot;&gt;&lt;/get&gt;
+
+        &lt;wait time=&quot;3000&quot;/&gt;
+        &lt;get qs=&quot;/iissamples/default/IISTitle.gif&quot;&gt;&lt;/get&gt;
+    
+    &lt;/code&gt;
+
+&lt;/sim&gt;</pre>
+    </font><p>&nbsp;</p>
+    <table border="0" width="742" cellspacing="0" cellpadding="2">
+      <tr>
+        <td width="738" bgcolor="#C4C1D0"><font color="#400000" size="3"><strong><big>&nbsp; </big><a
+        name="ver1"></a><big>Example - ver1.sim</big></strong></font></td>
+      </tr>
+    </table>
+    <p>This is an example of the verification mechanism. </p>
+    <pre><font SIZE="2">&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE sim SYSTEM &quot;file:sim.dtd&quot;&gt;
+&lt;sim&gt;
+
+    &lt;info&gt;
+        &lt;name      uid=&quot;1&quot;&gt;LOCAL1&lt;/name&gt;
+        &lt;version   num=&quot;1&quot;/&gt;
+        &lt;note&gt;Test local hits&lt;/note&gt;
+        
+        &lt;!-- Hit the local machine --&gt;
+        
+    &lt;/info&gt;
+    
+    &lt;code&gt;
+               
+        &lt;get qs=&quot;/Default.asp&quot;&gt;&lt;/get&gt;
+        &lt;get qs=&quot;/iissamples/default/SQUIGGLE.GIF&quot;&gt;&lt;/get&gt;
+        &lt;get qs=&quot;/iissamples/default/MSFT.GIF&quot;&gt;&lt;/get&gt;                
+        &lt;get qs=&quot;/iissamples/default/nav2.gif&quot;&gt;&lt;/get&gt;                
+        &lt;get qs=&quot;/iissamples/default/IISTitle.gif&quot;&gt;&lt;/get&gt;
+        
+        &lt;wait time=&quot;1500&quot;/&gt;
+        &lt;get qs=&quot;/iissamples/default/IE.GIF&quot;&gt;&lt;/get&gt;                
+        &lt;get qs=&quot;/default.asp&quot;&gt;&lt;/get&gt;                
+        &lt;get qs=&quot;/iissamples/default/IISSide.GIF&quot;&gt;&lt;/get&gt;   
+        &lt;get qs=&quot;/iissamples/default/IISTitle.gif&quot;&gt;&lt;/get&gt;        
+        &lt;get qs=&quot;/iissamples/default/LEARN.asp&quot;&gt;&lt;/get&gt;
+        &lt;get qs=&quot;/iissamples/default/IISTitle.gif&quot;&gt;&lt;/get&gt;
+        &lt;verify size=&quot;21318&quot;&gt;&lt;/verify&gt;
+        
+        &lt;wait time=&quot;2500&quot;/&gt;    
+        &lt;get qs=&quot;/iissamples/default/samples.asp&quot;&gt;&lt;/get&gt;
+        &lt;<a
+href="#verify">verify</a> crc=&quot;905819271&quot; size=&quot;5180&quot;&gt;
+            &lt;<a
+href="#seek">seek</a> string=&quot;release&quot;/&gt;
+            &lt;seek string=&quot;goat!&quot;/&gt;
+        &lt;/verify&gt;
+        &lt;verify crc=&quot;0&quot;&gt;
+            &lt;seek string=&quot;release&quot;/&gt;
+            &lt;seek string=&quot;site correctly you must&quot;/&gt;
+            &lt;seek string=&quot;http://www.microsoft.com/misc/cpyright.htm&quot;/&gt;
+        &lt;/verify&gt;
+        &lt;verify size=&quot;1111&quot;&gt;&lt;/verify&gt;
+
+        &lt;wait time=&quot;2000&quot;/&gt;
+        &lt;get qs=&quot;/iissamples/default/IISTitle.gif&quot;&gt;&lt;/get&gt;
+    
+    &lt;/code&gt;
+    
+&lt;/sim&gt;</pre>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p></font></font>&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%" height="21"></td>
+  </tr>
+</table>
+</body>
+</html>

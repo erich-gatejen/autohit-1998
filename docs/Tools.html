@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+
+<head>
+<title>Autohit SimLang Documentation</title>
+</head>
+
+<body BGCOLOR="#DEDCD8">
+
+<table border="0" width="750" cellpadding="2">
+  <tr>
+    <td width="33%" bgcolor="#00006F" height="38"><table border="0" width="100%"
+    cellpadding="2">
+      <tr>
+        <td width="100%" bgcolor="#DEDCD8"><p align="center"><font color="#400000"><big><big><strong>Autohit
+        * Tools</strong></big></big></font></td>
+      </tr>
+    </table>
+    </td>
+  </tr>
+  <tr>
+    <td width="100%">&nbsp;<p>This doclet describes the command line tools.&nbsp; </p>
+    <p>Before using any of these tools, you must set the enviroment by running set-env.bat.
+    &nbsp; You need only run it once for each command shell you open.</p>
+    <table border="0" width="100%">
+      <tr>
+        <td width="20%"><strong>SECTIONS</strong></td>
+        <td width="20%"><a href="#compile">Compile</a></td>
+        <td width="20%"><a href="#run">Run</a></td>
+        <td width="20%"><a href="#dump">Dump</a></td>
+      </tr>
+    </table>
+    <p>&nbsp;</p>
+    <table border="0" width="742" cellspacing="0" cellpadding="2">
+      <tr>
+        <td width="738" bgcolor="#C4C1D0"><font color="#400000"><strong><big>&nbsp; </big><a
+        name="compile"></a><big>Compile</big></strong></font></td>
+      </tr>
+    </table>
+    <p>The command line compiler.&nbsp; It will compile various source files into related
+    object files.&nbsp; </p>
+    <p><strong><big>usage</big></strong></p>
+    <p>Usage: compile sourcefile.ext objectfile<ul>
+      <li>The .ext will detirmine WHICH compiler is used. </li>
+      <li>The following are currently supported:<br>
+        <strong>.sim</strong> == Sim compiler. Object file extension is .osm</li>
+    </ul>
+    <p><big><strong>example</strong></big></p>
+    <p>C:\dev\autohit&gt;java compile test1.sim test1</p>
+    <p>This will compile the file <em>test1.sim</em> using the Sim compiler.&nbsp; If the
+    compile is successful, it will create the file<em> test1.osm</em>, which is a compiled sim
+    object.</p>
+    <p>&nbsp;</p>
+    <table border="0" width="742" cellspacing="0" cellpadding="2">
+      <tr>
+        <td width="738" bgcolor="#C4C1D0"><font color="#400000"><strong><big>&nbsp; </big><a
+        name="run"></a><big>Run</big></strong></font></td>
+      </tr>
+    </table>
+    <p>The command line execution context.&nbsp; It will run various object files using the
+    appropriate VM.&nbsp; </p>
+    <p><strong><big>usage</big></strong></p>
+    <p>Usage: run file.ext target {transport}<ul>
+      <li>The .ext will detirmine WHICH VM is used.&nbsp; The following are currently supported:<br>
+        <strong>.osm</strong> == Sim VM.</li>
+      <li>The target is passed to the registered transport as the target address.&nbsp; This may
+        or may not have meaning to the transport.</li>
+      <li>The transport field is optional.&nbsp; If a transport is specified, it will be
+        registered with the VM.&nbsp; If a transport is not specified, the Test Transport is used.
+        &nbsp; The following are currently supported:<br>
+        <strong>http</strong> == A light-wieght http transport.&nbsp; It supports cookies and
+        redirects.&nbsp; It does not parse or otherwise interact with the fetched content.<br>
+        <strong>test</strong> == A test transport.&nbsp; All requests are echoed to standard-out
+        and forgotten.</li>
+    </ul>
+    <p><big><strong>example</strong></big></p>
+    <p>C:\dev\autohit&gt;java run test1.osm localhost http</p>
+    <p>This will run the test1 Sim against the web server on the same machine.</p>
+    <p><big><strong>example</strong></big></p>
+    <p>C:\dev\autohit&gt;java run test1.osm x</p>
+    <p>This will run the test1 Sim using the test transport.&nbsp; The target is a nonsense
+    character since it isn't really needed by the test trasnport.<br>
+    </p>
+    <table border="0" width="742" cellspacing="0" cellpadding="2">
+      <tr>
+        <td width="738" bgcolor="#C4C1D0"><font color="#400000"><strong><big>&nbsp; </big><a
+        name="dump"></a><big>Dump</big></strong></font></td>
+      </tr>
+    </table>
+    <p>This will dump a compiled object to standard out.&nbsp; It should be man-readable.
+    &nbsp; This is typically only used for platform debugging.</p>
+    <p><strong><big>usage</big></strong></p>
+    <p>C:\dev\autohit&gt;java dump test1.osm<br>
+    </p>
+    <hr color="#808000">
+    <font </p><p></font>&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="33%" height="21"><p align="center">Copyright © 1999 Erich P G.</td>
+  </tr>
+</table>
+</body>
+</html>

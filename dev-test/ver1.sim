@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE sim SYSTEM "file:sim.dtd">
+<sim>
+
+    <info>
+        <name      uid="1">LOCAL1</name>
+        <version   num="1"/>
+        <note>Test local hits</note>
+        
+        <!-- Hit the local machine -->
+        
+    </info>
+    
+    <code>
+               
+        <get qs="/Default.asp"></get>
+        <get qs="/iissamples/default/SQUIGGLE.GIF"></get>
+        <get qs="/iissamples/default/MSFT.GIF"></get>                
+        <get qs="/iissamples/default/nav2.gif"></get>                
+        <get qs="/iissamples/default/IISTitle.gif"></get>
+        
+        <wait time="1500"/>
+        <get qs="/iissamples/default/IE.GIF"></get>                
+        <get qs="/default.asp"></get>                
+        <get qs="/iissamples/default/IISSide.GIF"></get>   
+        <get qs="/iissamples/default/IISTitle.gif"></get>        
+        <get qs="/iissamples/default/LEARN.asp"></get>
+        <get qs="/iissamples/default/IISTitle.gif"></get>
+        <verify size="21318"></verify>
+        
+        <wait time="2500"/>    
+        <get qs="/iissamples/default/samples.asp"></get>
+        <verify crc="905819271" size="5180">
+            <seek string="release"/>
+            <seek string="goat!"/>
+        </verify>
+        <verify crc="0">
+            <seek string="release"/>
+            <seek string="site correctly you must"/>
+            <seek string="http://www.microsoft.com/misc/cpyright.htm"/>
+        </verify>
+        <verify size="1111"></verify>
+
+        <wait time="2000"/>
+        <get qs="/iissamples/default/IISTitle.gif"></get>
+    
+    </code>
+    
+</sim>
